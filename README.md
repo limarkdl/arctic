@@ -1,5 +1,5 @@
 # ARctic - Accessible AR application 
-![Icon (1)](https://github.com/user-attachments/assets/2c1de20c-9021-4a01-bbb4-859215783909)
+![Icon (2)](https://github.com/user-attachments/assets/c1428968-d4bf-4719-95e1-f89602cb7d11)
 
 > Logs of team meetings are available in [this file](LOGS.md)
 
