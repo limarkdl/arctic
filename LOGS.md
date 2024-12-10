@@ -10,3 +10,11 @@
 
   1. Next.js
   2. AR.js
+
+
+## 10.12.2024 - 11:10
+- Defined team roles
+- Created telegram group for communication 
+- Discussed team with Dr. Piki
+- Defined the main concept:
+  1. QR/April tag scanning -> Name in the 3D appears -> Map opens

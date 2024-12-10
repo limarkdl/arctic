@@ -16,9 +16,16 @@ This is a group homework assignment for the University of Central Lancashire (Cy
 
 
 ---
-# Authors
-- @breadoorr
-- @ameyuriiii
-- @SKostanian
-- Timofey (pending github)
-- @limarkdl
+## Authors
+
+Team lead - @limarkdl
+
+Software Developer - @breadoorr
+
+Software Developer - @ameyuriiii
+
+Software Developer - Timofey (pending github)
+
+QA - @SKostanian
+
+Design - @limarkdl
