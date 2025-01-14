@@ -6,6 +6,21 @@
 [![FIGMA ARCTIC](https://github.com/user-attachments/assets/c3818859-72bf-4443-b21b-9ff6160f570b)](https://www.figma.com/design/8D3L5ru3k3rl5GRFikcHo2/CO2410%3A-The-Agile-Professional?node-id=27-434&t=zi0vDoWvbusvbo5O-1)
 > Logs of team meetings are available in [this file](LOGS.md)
 
+## How to build & run
+
+### Run `DEV`
+1. Run `npm i` from the root of this project
+2. Run `npm run dev`
+3. Now you have locally running development version. On each files change it rebuilds itself and changes are applied
+
+### Build & Run `PRODUCTION`
+1. Run `npm run build` from the root of this project
+2. Run `npm run start`
+3. Now you have locally running production version, as it will be on deployment
+
+### Run linting
+1. Run `npm run lint`
+2. Check console logs for highlighted issues with code styling that need to be resolved
 
 ## About
 This is a group homework assignment for the University of Central Lancashire (Cyprus) to create an accessible app using augmented reality (AR) technology for people with disabilities. 
