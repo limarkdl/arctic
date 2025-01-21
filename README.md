@@ -37,12 +37,12 @@ This is a group homework assignment for the University of Central Lancashire (Cy
 ## Authors
 
 | Role        | Name            | GitHub      |
-| ----------- |-----------------| ----------- |
-| 👨‍🏫 Team Lead   | Kostin Ivan     |  @limarkdl   | 
-| 👨‍💻 Software Developer | Chystiakova Daria   |  @breadoorr  | 
-| 👨‍💻 Software Developer | Ga___uk Alena   |  @ameyuriiii  | 
-| 👨‍💻 Software Developer | Sv___ev Timofey |  ---  |
-| 🕵️‍♂️ Quality Assurance  | Ko___an Spartak |  @SKostanian  |
-| 🎨 Design | Kostin Ivan     |  @limarkdl  |
+| ----------- |-----------------|-------------|
+| 👨‍🏫 Team Lead   | Kostin Ivan     | @limarkdl   | 
+| 👨‍💻 Software Developer | Chystiakova Daria   | @breadoorr  | 
+| 👨‍💻 Software Developer | Ga___uk Alena   | @ameyuriiii | 
+| 👨‍💻 Software Developer | Sv___ev Timofey | @TSvinarev  |
+| 🕵️‍♂️ Quality Assurance  | Ko___an Spartak | @SKostanian |
+| 🎨 Design | Kostin Ivan     | @limarkdl   |
 
 > Part of surnames were hidden to prevent of interlinking personal info to the GitHub account
