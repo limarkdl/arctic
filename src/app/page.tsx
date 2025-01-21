@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link';
 
 export default function Home() {
     return (
@@ -17,9 +18,12 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="w-full flex justify-center mb-20">
+                        <Link href='/ar.html'>
                         <div className="text-white text-3xl px-16 py-2 bg-primary rounded-lg w-fit">
+
                             Start
                         </div>
+                        </Link>
                     </div>
                 </div>
 
