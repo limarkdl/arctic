@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>AR.js Example</title>
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
     <!-- include ar.js for A-Frame -->
     <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.2/aframe/build/aframe-ar.js"></script>
     <style>
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-      }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
     </style>
-  </head>
-  <body>
-    <a-scene
-      embedded
-      arjs
-    >
-      <a-marker preset="hiro">
-        <a-box position="0 0.5 0" material="color: blue;"></a-box>
-      </a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+</head>
+<body>
+<a-scene
+        embedded
+        arjs
+>
+    <a-marker-camera preset='custom' type='pattern' url='tags/patt/20.patt'>
+        <!--        <a-cylinder position="0 0.5 0" material="color: blue;"></a-cylinder>-->
+        <a-text scale="2 2 2" value="Hello world" position="0 1 0" rotation="-90 0 0" material="color: blue;"></a-text>
+    </a-marker-camera>
+    <a-entity camera></a-entity>
+</a-scene>
+</body>
 </html>
