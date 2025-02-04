@@ -18,3 +18,8 @@
 - Discussed team with Dr. Piki
 - Defined the main concept:
   1. QR/April tag scanning -> Name in the 3D appears -> Map opens
+
+## 27.01.2024 - 11:16
+- Experimented with AR.js
+- Defined our workflow
+- Started preparing map assets
