@@ -31,20 +31,42 @@
     <a-entity camera></a-entity>
 </a-scene>
 </body>
-<script>
+<script type="module">
+
+    const RECEPTION_LOCATION = {x: -1.5, y: 0.1, z: 2};
+    const PIP_ROTATION = {x: -Math.PI / 2, y: 0, z: 0};
+
     var textureLoader = new THREE.TextureLoader();
     textureLoader.load('FLOOR_G.png', function(texture) {
         var geometry = new THREE.PlaneGeometry(10, 5); // Размеры плоскости можно корректировать
         var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
         var plane = new THREE.Mesh(geometry, material);
-        // Убедитесь, что м
+
         plane.position.set(0, 0, 0);
+        plane.scale.set(2.5, 2.5, 2.5);
         plane.rotation.x = -Math.PI / 2;
-        // аркер найден, и добавьте к нему плоскость
-        var marker = document.querySelector('a-marker-camera'); // либо, если используется <a-marker>, используйте 'a-marker'
-        if (marker) {
-            marker.object3D.add(plane);
-        }
+
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.load('OBJ/Pip_stand.mtl', function (materials) {
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.load('OBJ/Pip_stand.obj', function (object) {
+                object.scale.set(0.1, 0.1, 0.1);
+                object.rotation.set(PIP_ROTATION.x, PIP_ROTATION.y, PIP_ROTATION.z);
+                object.position.set(RECEPTION_LOCATION.x, RECEPTION_LOCATION.y, RECEPTION_LOCATION.z);
+
+                var marker = document.querySelector('a-marker-camera');
+                if (marker) {
+                    marker.object3D.add(plane);
+                    marker.object3D.add(object);
+                    console.log('3D Object with materials loaded onto marker.');
+                } else {
+                    console.log('No marker found.');
+                }
+            })
+        })
     });
 </script>
 </html>
