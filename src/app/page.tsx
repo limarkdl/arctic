@@ -46,7 +46,7 @@ export default function Home() {
 
                 {/* Menu Links */}
                 <nav className="flex flex-col items-center px-6 py-10 gap-5">
-                <Link href="/" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
+                    <Link href="/" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg text-center transition-all">
                             Home
                         </div>
