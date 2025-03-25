@@ -13,9 +13,7 @@ export const metadata: Metadata = {
     description: "Accessible AR application",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+export default function RootLayout({children}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (

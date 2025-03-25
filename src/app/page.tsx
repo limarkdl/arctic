@@ -97,7 +97,7 @@ export default function Home() {
                 </div>
             </main>
 
-            {/* Settings Icon */}
+            {/* Page Icon */}
             <div className="absolute bottom-6 right-6 hidden md:block">
                 <Link href="/settings">
                     <Settings className="text-white w-6 h-6" />

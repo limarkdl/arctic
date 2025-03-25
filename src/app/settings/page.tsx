@@ -1,11 +1,12 @@
 'use client';
 
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
 
-export default function Settings() {
+export default function Page() {
     const [language, setLanguage] = useState<'en' | 'ru'>('en');
 
     // Load saved language from localStorage
@@ -39,9 +40,9 @@ export default function Settings() {
             </header>
 
             {/* Title */}
-            <h1 className="text-2xl font-bold mb-10 text-center">Settings</h1>
+            <h1 className="text-2xl font-bold mb-10 text-center">Page</h1>
 
-            {/* Settings Sections */}
+            {/* Page Sections */}
             <div className="flex flex-col md:flex-row justify-center items-stretch gap-y-10 md:gap-x-16 w-full max-w-5xl">
                 {/* Color Blind Mode */}
                 <div className="flex flex-col items-center w-full md:w-auto text-center">
