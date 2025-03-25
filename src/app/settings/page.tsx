@@ -1,30 +1,87 @@
 'use client';
 
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
 
 export default function Page() {
+    type FontSizeOption = 'small' | 'normal' | 'big' | 'huge';
     const [language, setLanguage] = useState<'en' | 'ru'>('en');
+    const [fontSize, setFontSize] = useState<FontSizeOption>('normal');
+    const [controlsOn, setControlsOn] = useState(true);
 
-    // Load saved language from localStorage
+    // Load saved settings from localStorage
     useEffect(() => {
         const savedLang = localStorage.getItem('arctic-language');
-        if (savedLang === 'ru' || savedLang === 'en') {
-            setLanguage(savedLang);
-        }
+        const savedFontSize = localStorage.getItem('arctic-font-size') as FontSizeOption;
+        const savedControls = localStorage.getItem('arctic-controls') === 'on';
+
+        if (savedLang === 'ru' || savedLang === 'en') setLanguage(savedLang);
+        if (['small', 'normal', 'big', 'huge'].includes(savedFontSize)) setFontSize(savedFontSize);
+        setControlsOn(savedControls);
     }, []);
 
-    // Save language on change
+    // Translations
+    const t = {
+        en: {
+            title: "Settings",
+            textSize: "Text Size",
+            small: "Small",
+            normal: "Normal",
+            big: "Big",
+            huge: "Huge",
+            controls: "Controls",
+            on: "On",
+            off: "Off",
+            language: "Language",
+            eng: "English 🇬🇧",
+            rus: "Russian 🇷🇺"
+        },
+        ru: {
+            title: "Настройки",
+            textSize: "Размер текста",
+            small: "Мелкий",
+            normal: "Обычный",
+            big: "Большой",
+            huge: "Огромный",
+            controls: "Управление",
+            on: "Вкл",
+            off: "Выкл",
+            language: "Язык",
+            eng: "Английский 🇬🇧",
+            rus: "Русский 🇷🇺"
+        },
+    }[language];
+
+    // Font size classes
+    const fontSizeMap: Record<FontSizeOption, string> = {
+        small: 'text-sm',
+        normal: 'text-base',
+        big: 'text-lg',
+        huge: 'text-xl'
+    };
+    const fontClass = fontSizeMap[fontSize];
+
+    // Handlers
     const handleLanguageChange = (lang: 'en' | 'ru') => {
         setLanguage(lang);
         localStorage.setItem('arctic-language', lang);
     };
 
+    const handleFontSizeChange = (size: FontSizeOption) => {
+        setFontSize(size);
+        localStorage.setItem('arctic-font-size', size);
+    };
+
+    const toggleControls = () => {
+        const newState = !controlsOn;
+        setControlsOn(newState);
+        localStorage.setItem('arctic-controls', newState ? 'on' : 'off');
+    };
+
     return (
-        <div className="bg-black text-white min-h-screen w-full px-4 py-6 flex flex-col items-center">
+        <div className={`bg-black text-white min-h-screen w-full px-4 py-6 flex flex-col items-center ${fontClass}`}>
             {/* Header */}
             <header className="w-full flex justify-between items-center mb-8 max-w-5xl">
                 <Link href="/">
@@ -40,60 +97,67 @@ export default function Page() {
             </header>
 
             {/* Title */}
-            <h1 className="text-2xl font-bold mb-10 text-center">Page</h1>
+            <h1 className="text-2xl font-bold mb-10 text-center">{t.title}</h1>
 
-            {/* Page Sections */}
+            {/* Settings Sections */}
             <div className="flex flex-col md:flex-row justify-center items-stretch gap-y-10 md:gap-x-16 w-full max-w-5xl">
-                {/* Color Blind Mode */}
+                {/* Font Size */}
                 <div className="flex flex-col items-center w-full md:w-auto text-center">
-                    <h2 className="text-lg font-semibold mb-4">Color Blind Mode</h2>
-                    <div className="flex flex-col gap-2 text-sm">
+                    <h2 className="text-lg font-semibold mb-4">{t.textSize}</h2>
+                    <div className="flex flex-col gap-3 w-40">
                         {[
-                            { label: 'Normal', colors: 'bg-red-500 bg-yellow-400 bg-green-400 bg-blue-500 bg-purple-500' },
-                            { label: 'Deuteranopia', colors: 'bg-yellow-400 bg-yellow-300 bg-gray-400 bg-blue-500 bg-blue-700' },
-                            { label: 'Protanopia', colors: 'bg-orange-400 bg-yellow-400 bg-gray-400 bg-cyan-500 bg-indigo-500' },
-                            { label: 'Tritanopia', colors: 'bg-red-300 bg-green-300 bg-blue-300 bg-cyan-300 bg-pink-400' }
-                        ].map(({ label, colors }, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <span className="w-28 text-left">{label}</span>
-                                <div className="flex gap-1">
-                                    {colors.split(' ').map((color, j) => (
-                                        <div key={j} className={`${color} w-5 h-5 rounded-sm`} />
-                                    ))}
-                                </div>
-                            </div>
+                            { label: `${t.small} 🔹`, value: 'small' },
+                            { label: `${t.normal} 🔸`, value: 'normal' },
+                            { label: `${t.big} 🔷`, value: 'big' },
+                            { label: `${t.huge} 🔶`, value: 'huge' },
+                        ].map(({ label, value }) => (
+                            <button
+                                key={value}
+                                onClick={() => handleFontSizeChange(value as FontSizeOption)}
+                                className={`py-2 rounded font-semibold transition ${
+                                    fontSize === value ? 'bg-orange-500 text-white scale-105' : 'bg-white text-black'
+                                }`}
+                            >
+                                {label}
+                            </button>
                         ))}
                     </div>
                 </div>
 
                 {/* Controls */}
                 <div className="flex flex-col items-center w-full md:w-auto text-center">
-                    <h2 className="text-lg font-semibold mb-4">Controls</h2>
+                    <h2 className="text-lg font-semibold mb-4">{t.controls}</h2>
                     <div className="flex flex-col gap-3 w-32">
-                        <button className="bg-white text-black py-2 rounded font-semibold">On</button>
-                        <button className="bg-white text-black py-2 rounded font-semibold">Off</button>
+                        <button
+                            onClick={toggleControls}
+                            className={`py-2 rounded font-semibold transition ${
+                                controlsOn ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'
+                            }`}
+                        >
+                            {controlsOn ? t.on : t.off}
+                        </button>
                     </div>
                 </div>
 
-                {/* Language with Logic */}
+                {/* Language */}
                 <div className="flex flex-col items-center w-full md:w-auto text-center">
-                    <h2 className="text-lg font-semibold mb-4">Language</h2>
-                    <div className="flex flex-col gap-3 w-32">
+                    <h2 className="text-lg font-semibold mb-4">{t.language}</h2>
+                    <div className="flex flex-col gap-3 w-40">
                         <button
-                            className={`py-2 rounded font-semibold ${
-                                language === 'en' ? 'bg-orange-500 text-white' : 'bg-white text-black'
+                            className={`py-2 rounded font-semibold transition ${
+                                language === 'en' ? 'bg-orange-500 text-white scale-105' : 'bg-white text-black'
                             }`}
                             onClick={() => handleLanguageChange('en')}
                         >
-                            Eng
+                            {t.eng}
                         </button>
                         <button
-                            className={`py-2 rounded font-semibold ${
-                                language === 'ru' ? 'bg-orange-500 text-white' : 'bg-white text-black'
+                            className={`py-2 rounded font-semibold transition ${
+                                language === 'ru' ? 'bg-orange-500 text-white scale-105' : 'bg-white text-black'
                             }`}
                             onClick={() => handleLanguageChange('ru')}
                         >
-                            Рус
+                            {t.rus}
                         </button>
                     </div>
                 </div>

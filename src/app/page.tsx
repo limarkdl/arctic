@@ -1,12 +1,45 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Home as HomeIcon, Settings, Menu, ArrowLeft } from "lucide-react";
 
 export default function Home() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [language, setLanguage] = useState<'en' | 'ru'>('en');
+
+    useEffect(() => {
+        const savedLang = localStorage.getItem('arctic-language');
+        if (savedLang === 'ru' || savedLang === 'en') {
+            setLanguage(savedLang);
+        }
+    }, []);
+
+    const t = {
+        en: {
+            home: "Home",
+            settings: "Settings",
+            contact: "Contact us",
+            experience: "Experience the world of Augmented Reality!",
+            explore: "Explore, interact, and enjoy.",
+            learnMore: "Learn more about AR",
+            start: "Start",
+            howToPlay: "How to Play?",
+            terms: "Terms of Use",
+        },
+        ru: {
+            home: "Главная",
+            settings: "Настройки",
+            contact: "Связаться с нами",
+            experience: "Откройте мир дополненной реальности!",
+            explore: "Исследуйте, взаимодействуйте и наслаждайтесь.",
+            learnMore: "Узнать больше о AR",
+            start: "Начать",
+            howToPlay: "Как играть?",
+            terms: "Условия использования",
+        },
+    }[language];
 
     return (
         <div className="bg-black text-white h-screen w-screen flex flex-col relative overflow-hidden">
@@ -26,7 +59,7 @@ export default function Home() {
                 </Link>
             </header>
 
-            {/* Fullscreen Hamburger Menu */}
+            {/* Hamburger Menu */}
             <div
                 className={`fixed inset-0 bg-black text-white z-50 transition-transform duration-300 ease-in-out ${
                     menuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -48,51 +81,50 @@ export default function Home() {
                 <nav className="flex flex-col items-center px-6 py-10 gap-5">
                     <Link href="/" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg text-center transition-all">
-                            Home
+                            {t.home}
                         </div>
                     </Link>
 
                     <Link href="/settings" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
-                            Settings
+                            {t.settings}
                         </div>
                     </Link>
 
                     <Link href="/contact" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
-                            Contact us
+                            {t.contact}
                         </div>
                     </Link>
                 </nav>
             </div>
 
-
             {/* Main Content */}
             <main className="flex-grow flex flex-col justify-center items-center text-center px-6 py-10 max-w-2xl mx-auto">
                 <Image src="/ar-icon.png" alt="AR Icon" width={200} height={200} className="mb-8" />
                 <p className="text-xl font-medium leading-relaxed">
-                    Experience the world of Augmented Reality!<br />
-                    Explore, interact, and enjoy.
+                    {t.experience}<br />
+                    {t.explore}
                 </p>
                 <Link
                     href="/definition"
                     className="mt-2 text-sm text-blue-400 underline hover:text-blue-300 transition"
                 >
-                    Learn more about AR
+                    {t.learnMore}
                 </Link>
                 <div className="mt-10 flex flex-col gap-4 w-full max-w-xs">
                     <Link href="/ar.html">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg transition">
-                            Start
+                            {t.start}
                         </div>
                     </Link>
                     <Link href="/how-to-play">
                         <div className="bg-white text-black text-sm font-semibold py-2 rounded">
-                            How to Play?
+                            {t.howToPlay}
                         </div>
                     </Link>
                     <button className="bg-white text-black py-2 rounded text-sm">
-                        Terms of Use
+                        {t.terms}
                     </button>
                 </div>
             </main>
