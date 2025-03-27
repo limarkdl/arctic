@@ -106,12 +106,15 @@ export default function Home() {
                     {t.experience}<br />
                     {t.explore}
                 </p>
-                <Link
-                    href="/definition"
+                <a
+                    href="https://www.britannica.com/technology/augmented-reality"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="mt-2 text-sm text-blue-400 underline hover:text-blue-300 transition"
                 >
                     {t.learnMore}
-                </Link>
+                </a>
+
                 <div className="mt-10 flex flex-col gap-4 w-full max-w-xs">
                     <Link href="/ar.html">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg transition">
