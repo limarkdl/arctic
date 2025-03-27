@@ -54,9 +54,15 @@ export default function Home() {
                     <Menu className="w-6 h-6 text-white" />
                 </button>
 
-                <Link href="/" className="hidden md:block">
-                    <HomeIcon className="text-white w-6 h-6" />
-                </Link>
+                <div className="hidden md:flex items-center gap-4">
+                    <Link href="/settings">
+                        <Settings className="text-white w-6 h-6" />
+                    </Link>
+                </div>
+
+                {/*<Link href="/" className="hidden md:block">*/}
+                {/*    <HomeIcon className="text-white w-6 h-6" />*/}
+                {/*</Link>*/}
             </header>
 
             {/* Hamburger Menu */}
@@ -106,8 +112,8 @@ export default function Home() {
                     {t.experience}<br />
                     {t.explore}
                 </p>
-                <a
-                    href="https://www.britannica.com/technology/augmented-reality"
+
+                <a href="https://www.britannica.com/technology/augmented-reality"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 text-sm text-blue-400 underline hover:text-blue-300 transition"
@@ -126,18 +132,14 @@ export default function Home() {
                             {t.howToPlay}
                         </div>
                     </Link>
-                    <button className="bg-white text-black py-2 rounded text-sm">
-                        {t.terms}
-                    </button>
+
+                    <Link href="/terms">
+                        <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition">
+                            Terms of Use
+                        </div>
+                    </Link>
                 </div>
             </main>
-
-            {/* Page Icon */}
-            <div className="absolute bottom-6 right-6 hidden md:block">
-                <Link href="/settings">
-                    <Settings className="text-white w-6 h-6" />
-                </Link>
-            </div>
         </div>
     );
 }
