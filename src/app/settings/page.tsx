@@ -83,18 +83,24 @@ export default function Page() {
     return (
         <div className={`bg-black text-white min-h-screen w-full px-4 py-6 flex flex-col items-center ${fontClass}`}>
             {/* Header */}
-            <header className="w-full flex justify-between items-center mb-8 max-w-5xl">
+            <header className="w-full flex items-center justify-between mb-8 max-w-5xl border-b border-white/10 pb-4 px-2">
+                {/* Left - Back */}
                 <Link href="/">
                     <ArrowLeft className="w-6 h-6 text-white" />
                 </Link>
+
+                {/* Center - Logo */}
                 <div className="flex items-center gap-2">
                     <Image src="/logo.svg" alt="logo" width={32} height={32} />
                     <p className="text-xl font-bold">ARctic</p>
                 </div>
+
+                {/* Right - Home */}
                 <Link href="/">
                     <Home className="w-6 h-6 text-white" />
                 </Link>
             </header>
+
 
             {/* Title */}
             <h1 className="text-2xl font-bold mb-10 text-center">{t.title}</h1>

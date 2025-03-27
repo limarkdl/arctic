@@ -50,19 +50,22 @@ export default function Home() {
                     <p className="text-2xl font-bold">ARctic</p>
                 </div>
 
-                <button className="md:hidden" onClick={() => setMenuOpen(true)}>
-                    <Menu className="w-6 h-6 text-white" />
-                </button>
+                <div className="flex items-center gap-4 md:hidden">
+                    <Link href="/settings">
+                        <Settings className="text-white w-6 h-6" />
+                    </Link>
+                    <button onClick={() => setMenuOpen(true)}>
+                        <Menu className="w-6 h-6 text-white" />
+                    </button>
+                </div>
 
+                {/* Desktop Settings */}
                 <div className="hidden md:flex items-center gap-4">
                     <Link href="/settings">
                         <Settings className="text-white w-6 h-6" />
                     </Link>
                 </div>
 
-                {/*<Link href="/" className="hidden md:block">*/}
-                {/*    <HomeIcon className="text-white w-6 h-6" />*/}
-                {/*</Link>*/}
             </header>
 
             {/* Hamburger Menu */}
@@ -91,17 +94,24 @@ export default function Home() {
                         </div>
                     </Link>
 
-                    <Link href="/settings" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
-                        <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
-                            {t.settings}
-                        </div>
-                    </Link>
+                    {/*<Link href="/settings" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">*/}
+                    {/*    <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">*/}
+                    {/*        {t.settings}*/}
+                    {/*    </div>*/}
+                    {/*</Link>*/}
 
                     <Link href="/contact" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
                             {t.contact}
                         </div>
                     </Link>
+
+                    <Link href="/terms" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
+                        <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
+                            {t.terms}
+                        </div>
+                    </Link>
+
                 </nav>
             </div>
 
@@ -123,22 +133,19 @@ export default function Home() {
 
                 <div className="mt-10 flex flex-col gap-4 w-full max-w-xs">
                     <Link href="/ar.html">
-                        <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg transition">
+                        <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg text-center transition">
                             {t.start}
                         </div>
                     </Link>
+
                     <Link href="/how-to-play">
-                        <div className="bg-white text-black text-sm font-semibold py-2 rounded">
+                        <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition">
                             {t.howToPlay}
                         </div>
                     </Link>
 
-                    <Link href="/terms">
-                        <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition">
-                            Terms of Use
-                        </div>
-                    </Link>
                 </div>
+
             </main>
         </div>
     );
