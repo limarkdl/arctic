@@ -94,12 +94,6 @@ export default function Home() {
                         </div>
                     </Link>
 
-                    {/*<Link href="/settings" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">*/}
-                    {/*    <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">*/}
-                    {/*        {t.settings}*/}
-                    {/*    </div>*/}
-                    {/*</Link>*/}
-
                     <Link href="/contact" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
                             {t.contact}
