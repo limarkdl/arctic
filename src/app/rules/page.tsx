@@ -31,13 +31,7 @@ export default function HowToPlayPage() {
                     title: "Interact with AR Objects",
                     desc: "Tap on AR elements to hear descriptions, get information, or follow audio cues."
                 },
-                {
-                    title: "Follow the Directions",
-                    desc: "Use on-screen arrows and markers to navigate toward your next objective."
-                }
             ],
-            scanNote: "Scan this AR marker to begin",
-            back: "Back"
         },
         ru: {
             howToPlay: "Как играть в ARctic",
@@ -54,13 +48,8 @@ export default function HowToPlayPage() {
                     title: "Взаимодействуйте с объектами",
                     desc: "Нажимайте на элементы AR, чтобы услышать описания или получить информацию."
                 },
-                {
-                    title: "Следуйте указаниям",
-                    desc: "Используйте стрелки и маркеры для навигации к цели."
-                }
+
             ],
-            scanNote: "Сканируйте этот AR-маркер, чтобы начать",
-            back: "Назад"
         }
     }[language];
 
@@ -94,17 +83,6 @@ export default function HowToPlayPage() {
                         </div>
                     ))}
                 </div>
-
-                {/*<div className="mt-16 flex flex-col items-center">*/}
-                {/*    <Image*/}
-                {/*        src="/AR-marker.png"*/}
-                {/*        alt="Example of an AR marker to scan"*/}
-                {/*        width={180}*/}
-                {/*        height={180}*/}
-                {/*        className="object-contain mb-2"*/}
-                {/*    />*/}
-                {/*    <p className="text-sm text-gray-300">{t.scanNote}</p>*/}
-                {/*</div>*/}
             </main>
         </div>
     );
