@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Home as HomeIcon, Settings, Menu, ArrowLeft } from "lucide-react";
+import {Settings, Menu, ArrowLeft } from "lucide-react";
 
 export default function Home() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -132,7 +132,7 @@ export default function Home() {
                         </div>
                     </Link>
 
-                    <Link href="/how-to-play">
+                    <Link href="/rules">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition">
                             {t.howToPlay}
                         </div>
