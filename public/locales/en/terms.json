@@ -1,0 +1,34 @@
+{
+  "contact": "Contact us",
+  "terms": "Terms of Use",
+  "title": "ARctic – Terms of Use",
+  "backToHome": "⬅ Back to Home",
+  "camera": "1. 📷 Camera Access",
+  "cameraDetails": [
+    "ARctic requires access to your device’s camera to enable augmented reality functionality:",
+    "Used to detect visual markers and display AR content.",
+    "We do not record, store, or transmit any camera data.",
+    "Your camera feed stays local to your device and browser only."
+  ],
+  "privacy": "2. 🔒 Privacy & Data",
+  "privacyDetails": [
+    "No personal data is collected or stored.",
+    "We do not access your location, contacts, or files.",
+    "No third-party analytics or advertising is used."
+  ],
+  "consent": "3. ✅ User Consent",
+  "consentIntro": "By using ARctic, you agree to:",
+  "consentDetails": [
+    "Allow access to your device’s camera.",
+    "Use the app responsibly in a safe, distraction-free environment."
+  ],
+  "consentFooter": "If you do not agree with these terms, please do not use ARctic.",
+  "disclaimer": "4. ⚠️ Disclaimer",
+  "disclaimerDetails": [
+    "ARctic is provided “as-is” for demo and educational use.",
+    "We are not liable for device issues, performance, or user misuse.",
+    "For best results, use in a well-lit, open environment."
+  ],
+  "contactSection": "5. 📩 Contact",
+  "contactText": "For support or questions, email us at"
+}

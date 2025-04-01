@@ -2,6 +2,8 @@ import type {Metadata} from "next";
 import "./globals.css";
 
 import {ADLaM_Display} from "next/font/google";
+import {ReactNode} from "react";
+import Providers from "@/providers";
 
 const adlam = ADLaM_Display({
     subsets: ["adlam"],
@@ -14,14 +16,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({children}: Readonly<{
-    children: React.ReactNode;
+    children: ReactNode;
 }>) {
     return (
         <html lang="en">
         <body
             className={`${adlam.className} antialiased bg-background`}
         >
-        {children}
+        <Providers>
+            {children}
+        </Providers>
         </body>
         </html>
     );

@@ -2,3 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --arctic-text-xs: 0.75rem;     /* 12px */
+    --arctic-text-sm: 0.875rem;    /* 14px */
+    --arctic-text-base: 1rem;      /* 16px */
+    --arctic-text-lg: 1.125rem;    /* 18px */
+    --arctic-text-xl: 1.25rem;     /* 20px */
+    --arctic-text-2xl: 1.5rem;     /* 24px */
+    --arctic-text-3xl: 1.875rem;   /* 30px */
+    --arctic-text-4xl: 2.25rem;    /* 36px */
+    --arctic-text-5xl: 3rem;       /* 48px */
+    --arctic-text-6xl: 3.75rem;    /* 60px */
+    --arctic-text-7xl: 4.5rem;     /* 72px */
+    --arctic-text-8xl: 6rem;       /* 96px */
+    --arctic-text-9xl: 8rem;       /* 128px */
+
+    --arctic-leading-none: 1;
+    --arctic-leading-tight: 1.25;
+    --arctic-leading-snug: 1.375;
+    --arctic-leading-normal: 1.5;
+    --arctic-leading-relaxed: 1.625;
+    --arctic-leading-loose: 2;
+
+    --arctic-tracking-tighter: -0.05em;
+    --arctic-tracking-tight: -0.025em;
+    --arctic-tracking-normal: 0em;
+    --arctic-tracking-wide: 0.025em;
+    --arctic-tracking-wider: 0.05em;
+    --arctic-tracking-widest: 0.1em;
+}

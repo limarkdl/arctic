@@ -1,32 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import {ArrowLeft} from 'lucide-react';
+import {useLanguage} from "@/features/localization";
 
 const ContactUs: React.FC = () => {
-    const [language, setLanguage] = useState<'en' | 'ru'>('en');
 
-    useEffect(() => {
-        const savedLang = localStorage.getItem('arctic-language');
-        if (savedLang === 'ru' || savedLang === 'en') {
-            setLanguage(savedLang);
-        }
-    }, []);
-
-    const t = {
-        en: {
-            title: "Contact Us",
-            subtitle: "For any questions, feedback, or support:",
-            email: "deepfakeprojectteam@gmail.com",
-        },
-        ru: {
-            title: "Связаться с нами",
-            subtitle: "По любым вопросам, отзывам или поддержке:",
-            email: "deepfakeprojectteam@gmail.com",
-        },
-    }[language];
+    const {t} = useLanguage('contact')
 
     return (
         <div className="bg-black text-white min-h-screen flex flex-col items-center px-6 py-10">
@@ -50,16 +32,16 @@ const ContactUs: React.FC = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl font-bold text-center mb-8">{t.title}</h1>
+            <h1 className="text-3xl font-bold text-center mb-8">{t('title')}</h1>
 
             {/* Content */}
             <div className="bg-white/5 p-6 rounded-xl border border-white/10 shadow-inner w-full max-w-md text-center">
-                <p className="text-base mb-4">{t.subtitle}</p>
+                <p className="text-base mb-4">{t('subtitle')}</p>
                 <a
-                    href={`mailto:${t.email}`}
+                    href={`mailto:${t('email')}`}
                     className="text-blue-400 underline hover:text-blue-300 transition text-lg font-medium break-all"
                 >
-                    {t.email}
+                    {t('email')}
                 </a>
             </div>
         </div>

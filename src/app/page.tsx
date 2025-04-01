@@ -1,45 +1,15 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {Settings, Menu, ArrowLeft } from "lucide-react";
+import {ArrowLeft, Menu, Settings} from "lucide-react";
+import {useLanguage} from "@/features/localization";
 
 export default function Home() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [language, setLanguage] = useState<'en' | 'ru'>('en');
 
-    useEffect(() => {
-        const savedLang = localStorage.getItem('arctic-language');
-        if (savedLang === 'ru' || savedLang === 'en') {
-            setLanguage(savedLang);
-        }
-    }, []);
-
-    const t = {
-        en: {
-            home: "Home",
-            settings: "Settings",
-            contact: "Contact us",
-            experience: "Experience the world of Augmented Reality!",
-            explore: "Explore, interact, and enjoy.",
-            learnMore: "Learn more about AR",
-            start: "Start",
-            howToPlay: "How to Play?",
-            terms: "Terms of Use",
-        },
-        ru: {
-            home: "Главная",
-            settings: "Настройки",
-            contact: "Связаться с нами",
-            experience: "Откройте мир дополненной реальности!",
-            explore: "Исследуйте, взаимодействуйте и наслаждайтесь.",
-            learnMore: "Узнать больше о AR",
-            start: "Начать",
-            howToPlay: "Как играть?",
-            terms: "Условия использования",
-        },
-    }[language];
+    const { t } = useLanguage('home')
 
     return (
         <div className="bg-black text-white h-screen w-screen flex flex-col relative overflow-hidden">
@@ -90,19 +60,19 @@ export default function Home() {
                 <nav className="flex flex-col items-center px-6 py-10 gap-5">
                     <Link href="/" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg text-center transition-all">
-                            {t.home}
+                            {t('home')}
                         </div>
                     </Link>
 
                     <Link href="/contact" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
-                            {t.contact}
+                            {t('contact')}
                         </div>
                     </Link>
 
                     <Link href="/terms" onClick={() => setMenuOpen(false)} className="w-full max-w-xs">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition-all">
-                            {t.terms}
+                            {t('terms')}
                         </div>
                     </Link>
 
@@ -113,8 +83,8 @@ export default function Home() {
             <main className="flex-grow flex flex-col justify-center items-center text-center px-6 py-10 max-w-2xl mx-auto">
                 <Image src="/ar-icon.png" alt="AR Icon" width={200} height={200} className="mb-8" />
                 <p className="text-xl font-medium leading-relaxed">
-                    {t.experience}<br />
-                    {t.explore}
+                    {t('experience')}<br />
+                    {t('explore')}
                 </p>
 
                 <a href="https://www.britannica.com/technology/augmented-reality"
@@ -122,19 +92,19 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="mt-2 text-sm text-blue-400 underline hover:text-blue-300 transition"
                 >
-                    {t.learnMore}
+                    {t('learnMore')}
                 </a>
 
                 <div className="mt-10 flex flex-col gap-4 w-full max-w-xs">
                     <Link href="/ar.html">
                         <div className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 rounded-lg text-center transition">
-                            {t.start}
+                            {t('start')}
                         </div>
                     </Link>
 
                     <Link href="/rules">
                         <div className="bg-white text-black text-lg font-semibold py-3 rounded-lg text-center hover:bg-gray-100 transition">
-                            {t.howToPlay}
+                            {t('howToPlay')}
                         </div>
                     </Link>
 
