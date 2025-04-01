@@ -29,7 +29,7 @@ export default function Page() {
             </header>
 
             <h1 className="text-3xl font-bold mb-10 text-center leading-normal">{t('title')}</h1>
-                <div className="flex w-full gap-12 justify-evenly max-w-5xl">
+                <div className="flex flex-col md:flex-row items-center md:items-start w-full gap-12 justify-evenly max-w-5xl">
                     <ScalingSwitcher/>
                     <ControlsToggle/>
                     <LanguageSwitcher/>
