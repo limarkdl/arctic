@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {ArrowLeft} from 'lucide-react';
-import {useLanguage} from "@/hooks/useLanguage";
+import {useLanguage} from "@/features/localization";
 
 const ContactUs: React.FC = () => {
 

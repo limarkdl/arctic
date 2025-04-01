@@ -4,15 +4,14 @@ import {useEffect, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {ArrowLeft, Home} from "lucide-react";
-import {useLanguage} from "@/hooks/useLanguage";
-import {LANGUAGES} from "@/i18n";
+import {LanguageSwitcher, useLanguage} from "@/features/localization";
 
 export default function Page() {
     type FontSizeOption = 'small' | 'normal' | 'big' | 'huge';
     const [fontSize, setFontSize] = useState<FontSizeOption>('normal');
     const [controlsOn, setControlsOn] = useState(true);
 
-    const {t, currentLanguage, changeLanguage} = useLanguage('settings');
+    const {t} = useLanguage('settings');
 
     useEffect(() => {
         const savedFontSize = localStorage.getItem('arctic-font-size') as FontSizeOption;
@@ -31,9 +30,6 @@ export default function Page() {
     };
     const fontClass = fontSizeMap[fontSize];
 
-    const handleLanguageChange = (lang: 'en' | 'ru') => {
-        changeLanguage(lang);
-    };
 
     const handleFontSizeChange = (size: FontSizeOption) => {
         setFontSize(size);
@@ -113,22 +109,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                {/* Language */}
-                <div className="flex flex-col items-center w-full md:w-auto text-center">
-                    <h2 className="text-lg font-semibold mb-4">{t('language')}</h2>
-                    <div className="flex flex-col gap-3 w-40">
-                        {Object.entries(LANGUAGES).map(([key]) => (
-                            <button key={key}
-                                className={`py-2 rounded font-semibold transition ${
-                                    currentLanguage === key ? 'bg-orange-500 text-white scale-105' : 'bg-white text-black'
-                                }`}
-                                onClick={() => handleLanguageChange(key as 'en' | 'ru')}
-                            >
-                                {t(key)}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <LanguageSwitcher/>
             </div>
         </div>
     );

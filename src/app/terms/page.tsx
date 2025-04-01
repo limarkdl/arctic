@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {ArrowLeft, Menu, Settings} from 'lucide-react';
-import {useLanguage} from "@/hooks/useLanguage";
+import {useLanguage} from "@/features/localization";
 
 const TermsOfUse: React.FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);

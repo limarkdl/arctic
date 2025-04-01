@@ -1,9 +1,9 @@
 'use client';
 
 import {ReactNode, useEffect, useState} from 'react';
-import initI18n from '@/i18n';
 import {I18nextProvider} from 'react-i18next';
 import {i18n} from "i18next";
+import initI18n from "@/features/localization/i18n";
 
 interface I18nProviderProps {
     children: ReactNode;

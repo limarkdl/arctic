@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslation} from 'react-i18next';
-import {LANGUAGES} from '@/i18n';
+import {LANGUAGES} from '../i18n';
 
 export function useLanguage(namespace: string = 'common') {
     const {t, i18n} = useTranslation(namespace);

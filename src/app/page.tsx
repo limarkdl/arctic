@@ -4,7 +4,7 @@ import {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {ArrowLeft, Menu, Settings} from "lucide-react";
-import {useLanguage} from "@/hooks/useLanguage";
+import {useLanguage} from "@/features/localization";
 
 export default function Home() {
     const [menuOpen, setMenuOpen] = useState(false);

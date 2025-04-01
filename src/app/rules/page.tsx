@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {ArrowLeft, Settings} from "lucide-react";
-import {useLanguage} from "@/hooks/useLanguage";
+import {useLanguage} from "@/features/localization";
 
 export default function HowToPlayPage() {
     const {t} = useLanguage('rules')
