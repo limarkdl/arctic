@@ -1,0 +1,17 @@
+{
+  "howToPlay": "How to Play ARctic",
+  "steps": [
+    {
+      "title": "Scan the AR Marker",
+      "desc": "Tap 'Start' and point your camera at the AR marker to initialize the AR experience."
+    },
+    {
+      "title": "Explore the AR Map",
+      "desc": "Move your device around to discover AR objects anchored in your environment."
+    },
+    {
+      "title": "Interact with AR Objects",
+      "desc": "Tap on AR elements to hear descriptions, get information, or follow audio cues."
+    }
+  ]
+}
