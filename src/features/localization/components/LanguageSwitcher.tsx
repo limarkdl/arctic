@@ -15,7 +15,7 @@ const LanguageSwitcher = () => {
             <div className="flex flex-col gap-3 w-40">
                 {Object.entries(LANGUAGES).map(([key]) => (
                     <button key={key}
-                            className={`py-2 rounded font-semibold transition ${
+                            className={`py-2 rounded text-base font-semibold transition ${
                                 currentLanguage === key ? 'bg-orange-500 text-white scale-105' : 'bg-white text-black'
                             }`}
                             onClick={() => handleLanguageChange(key as 'en' | 'ru')}
