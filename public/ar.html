@@ -15,17 +15,38 @@
             height: 100%;
             overflow: hidden;
         }
+
+        .camera-select {
+            position: absolute;
+            top: 10px;
+            right: 64px;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 <div class="ui--overlay">
     <button class="ui--button ui-button--home"><a class="ui--button--link" href="/"><i class="bi bi-house-fill"></i></a></button>
+    <button class="ui--button ui-button--camera" id="switchCameraBtn"><i class="bi bi-camera"></i></button>
+</div>
+
+<div class="camera-select" id="cameraSelect">
+    <select id="cameraOptions">
+        <option value="">Loading cameras...</option>
+    </select>
+    <button id="applyCamera">Apply</button>
 </div>
 
 <a-scene
         embedded
         arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
         zoom-controls
+        id="scene"
 >
     <a-marker id="reception" preset="custom" type="pattern" url="tags/patt/20.patt"></a-marker>
     <a-marker id="library" preset="custom" type="pattern" url="tags/patt/1.patt"></a-marker>
@@ -41,6 +62,98 @@
     const LIBRARY_LOCATION = {x: 10, y: 0, z: 0};
     const CAFETERIA_LOCATION = {x: 8, y: 0, z: 0};
     const PIP_ROTATION = {x: -Math.PI / 2, y: 0, z: 0};
+
+    const switchCameraBtn = document.getElementById('switchCameraBtn');
+    const cameraSelect = document.getElementById('cameraSelect');
+    const cameraOptions = document.getElementById('cameraOptions');
+    const applyCamera = document.getElementById('applyCamera');
+    let availableCameras = [];
+    let currentStream = null;
+
+    async function getCameraDevices() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            return devices.filter(device => device.kind === 'videoinput');
+        } catch (error) {
+            console.error('Error enumerating devices:', error);
+            return [];
+        }
+    }
+
+    async function setupCameraOptions() {
+        availableCameras = await getCameraDevices();
+
+        cameraOptions.innerHTML = '';
+
+        if (availableCameras.length === 0) {
+            cameraOptions.innerHTML = '<option value="">No cameras found</option>';
+            return;
+        }
+
+        availableCameras.forEach((camera, index) => {
+            const option = document.createElement('option');
+            option.value = camera.deviceId;
+
+            let label = camera.label || `Camera ${index + 1}`;
+            if (label.toLowerCase().includes('back') || label.toLowerCase().includes('rear')) {
+                label += ' (Back)';
+                option.selected = true;
+            }
+            option.text = label;
+
+            cameraOptions.appendChild(option);
+        });
+    }
+
+    async function applySelectedCamera() {
+        const selectedCameraId = cameraOptions.value;
+
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        const arScene = document.querySelector('a-scene');
+        const arSystem = arScene.systems['arjs'];
+        const arContext = arSystem._arContext;
+        const arToolkitSource = arContext.arToolkitSource;
+
+        try {
+            const constraints = {
+                video: {
+                    deviceId: { exact: selectedCameraId },
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            };
+
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            currentStream = stream;
+
+            const video = arToolkitSource.domElement;
+            video.srcObject = stream;
+
+            cameraSelect.style.display = 'none';
+
+            arToolkitSource.onResizeElement();
+            arToolkitSource.copyElementSizeTo(arContext.arController.canvas);
+
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
+    }
+
+    switchCameraBtn.addEventListener('click', async () => {
+        if (cameraSelect.style.display === 'none' || cameraSelect.style.display === '') {
+            await setupCameraOptions();
+            cameraSelect.style.display = 'block';
+        } else {
+            cameraSelect.style.display = 'none';
+        }
+    });
+
+    applyCamera.addEventListener('click', applySelectedCamera);
+
+    document.querySelector('a-scene').addEventListener('loaded', setupCameraOptions);
 
     AFRAME.registerComponent('zoom-controls', {
         init: function () {
