@@ -32,12 +32,12 @@
 </a-scene>
 
 <script type="module">
-    const RECEPTION_PIP_LOCATION = {x: -1.5, y: 0.1, z: 2};
+    const RECEPTION_PIP_LOCATION = {x: -1, y: 0.1, z: 1.5};
     const LIBRARY_PIP_LOCATION = {x: 0, y: 0.1, z: 0};
     const CAFETERIA_PIP_LOCATION = {x: 2, y: 0.1, z: 1};
     const RECEPTION_LOCATION = {x: 0, y: 0, z: 0};
-    const LIBRARY_LOCATION = {x: 10, y: 0, z: 0};
-    const CAFETERIA_LOCATION = {x: 8, y: 0, z: 0};
+    const LIBRARY_LOCATION = {x: 6, y: 0, z: 0};
+    const CAFETERIA_LOCATION = {x: 6.25, y: 0, z: 0};
     const PIP_ROTATION = {x: -Math.PI / 2, y: 0, z: 0};
 
     const sceneEl = document.getElementById('scene');
@@ -67,7 +67,7 @@
                 const material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
                 const plane = new THREE.Mesh(geometry, material);
                 plane.position.set(map_position.x, map_position.y, map_position.z);
-                plane.scale.set(2.5, 2.5, 2.5);
+                plane.scale.set(1.5, 1.5, 1.5);
                 plane.rotation.x = -Math.PI / 2;
                 marker.object3D.add(plane);
                 loadedData.plane = plane;
@@ -92,7 +92,7 @@
                     objLoader.load(
                         'OBJ/Pip_stand.obj',
                         (object) => {
-                            object.scale.set(0.1, 0.1, 0.1);
+                            object.scale.set(0.05, 0.05, 0.05);
                             object.rotation.set(PIP_ROTATION.x, PIP_ROTATION.y, PIP_ROTATION.z);
                             object.position.set(pip_position.x, pip_position.y, pip_position.z);
                             marker.object3D.add(object);
