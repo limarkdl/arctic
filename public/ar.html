@@ -47,17 +47,6 @@
             text-decoration: none;
         }
 
-        .camera-select {
-            position: absolute;
-            top: 60px;
-            right: 10px;
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-            display: none;
-        }
 
         .arjs-video {
             position: absolute;
@@ -89,19 +78,11 @@
 <div class="ui--overlay">
     <button class="ui--button ui-button--home"><a class="ui--button--link" href="/"><i class="bi bi-house-fill"></i></a>
     </button>
-    <button class="ui--button ui-button--camera" id="switchCameraBtn"><i class="bi bi-camera"></i></button>
-</div>
-
-<div class="camera-select" id="cameraSelect">
-    <select id="cameraOptions">
-        <option value="">Loading cameras...</option>
-    </select>
-    <button id="applyCamera">Apply</button>
 </div>
 
 <a-scene
         embedded
-        arjs="trackingMethod: best; sourceType: webcam; videoTexture: false; debugUIEnabled: false; displayWidth: window.innerWidth; displayHeight: window.innerHeight;"
+        arjs="trackingMethod: best; sourceType: webcam; videoTexture: false; debugUIEnabled: false;"
         zoom-controls
         renderer="antialias: true; alpha: true; logarithmicDepthBuffer: true;"
         vr-mode-ui="enabled: false;"
@@ -124,189 +105,7 @@
     const PIP_ROTATION = {x: -Math.PI / 2, y: 0, z: 0};
 
     const sceneEl = document.getElementById('scene');
-    const switchCameraBtn = document.getElementById('switchCameraBtn');
-    const cameraSelect = document.getElementById('cameraSelect');
-    const cameraOptions = document.getElementById('cameraOptions');
-    const applyCamera = document.getElementById('applyCamera');
 
-    let availableCameras = [];
-    let currentStream = null;
-    let arToolkitSource = null;
-    let arToolkitContext = null;
-
-    function handleResize() {
-        console.log('handleResize called');
-        if (!sceneEl || !sceneEl.hasLoaded || !arToolkitSource || !arToolkitContext) {
-            console.log('Resize prerequisites not met.');
-            return;
-        }
-
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-
-        console.log(`Window dimensions: ${screenWidth}x${screenHeight}`);
-
-        arToolkitSource.onResizeElement();
-
-        arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
-
-        const renderer = sceneEl.renderer;
-        const canvas = sceneEl.canvas;
-        if (renderer && canvas) {
-            console.log(`Setting renderer size to: ${screenWidth}x${screenHeight}`);
-            const effectiveWidth = canvas.clientWidth || screenWidth;
-            const effectiveHeight = canvas.clientHeight || screenHeight;
-            renderer.setSize(effectiveWidth, effectiveHeight);
-        } else {
-            console.log('Renderer or Canvas not found for resize.');
-        }
-
-
-        const camera = sceneEl.camera;
-        if (camera) {
-            camera.aspect = screenWidth / screenHeight;
-            camera.updateProjectionMatrix();
-            console.log(`Camera aspect updated to: ${camera.aspect}`);
-        } else {
-            console.log('Camera not found for aspect update.');
-        }
-
-        sceneEl.resize();
-        console.log('handleResize finished');
-    }
-
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(handleResize, 250); // Debounce
-    });
-
-    async function getCameraDevices() {
-        try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            return devices.filter(device => device.kind === 'videoinput');
-        } catch (error) {
-            console.error('Error enumerating devices:', error);
-            return [];
-        }
-    }
-
-    async function setupCameraOptions() {
-        availableCameras = await getCameraDevices();
-        cameraOptions.innerHTML = '';
-
-        if (availableCameras.length === 0) {
-            cameraOptions.innerHTML = '<option value="">No cameras found</option>';
-            applyCamera.disabled = true;
-            return;
-        }
-
-        applyCamera.disabled = false;
-        let hasSetSelection = false;
-        availableCameras.forEach((camera, index) => {
-            const option = document.createElement('option');
-            option.value = camera.deviceId;
-            let label = camera.label || `Camera ${index + 1}`;
-            if (label.toLowerCase().includes('back') || label.toLowerCase().includes('rear')) {
-                label += ' (Back)';
-            } else if (label.toLowerCase().includes('front')) {
-                label += ' (Front)';
-            }
-            option.text = label;
-            cameraOptions.appendChild(option);
-        });
-
-        const currentVideoTrack = currentStream?.getVideoTracks()[0];
-        if (currentVideoTrack) {
-            const currentDeviceId = currentVideoTrack.getSettings().deviceId;
-            if (currentDeviceId && cameraOptions.querySelector(`option[value="${currentDeviceId}"]`)) {
-                cameraOptions.value = currentDeviceId;
-                hasSetSelection = true;
-            }
-        }
-
-        if (!hasSetSelection) {
-            const backCameraOption = Array.from(cameraOptions.options).find(opt => opt.text.toLowerCase().includes('back'));
-            if (backCameraOption) {
-                backCameraOption.selected = true;
-            } else if (cameraOptions.options.length > 0) {
-                cameraOptions.options[0].selected = true;
-            }
-        }
-    }
-
-    async function applySelectedCamera() {
-        const selectedCameraId = cameraOptions.value;
-        if (!selectedCameraId || !arToolkitSource) {
-            console.log("No camera selected or AR source not ready.");
-            cameraSelect.style.display = 'none';
-            return;
-        }
-
-        console.log(`Attempting to switch to camera: ${selectedCameraId}`);
-
-        if (currentStream) {
-            currentStream.getTracks().forEach(track => track.stop());
-            console.log('Stopped previous stream.');
-        }
-
-        try {
-            const constraints = {
-                video: {
-                    deviceId: {exact: selectedCameraId},
-                    width: {ideal: 1280},
-                    height: {ideal: 720}
-                }
-            };
-
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            console.log('Obtained new video stream.');
-            currentStream = stream;
-
-            const video = arToolkitSource.domElement;
-            if (!video) {
-                console.error("AR Toolkit video element not found!");
-                cameraSelect.style.display = 'none';
-                return;
-            }
-
-            video.srcObject = stream;
-            await video.play();
-            console.log('Assigned new stream to video element and playing.');
-
-            video.onloadedmetadata = () => {
-                console.log('New video metadata loaded.');
-                handleResize();
-                cameraSelect.style.display = 'none';
-                console.log('Camera switch complete, resize triggered.');
-            };
-            video.onerror = (e) => {
-                console.error('Error playing new video stream:', e);
-                cameraSelect.style.display = 'none';
-            }
-
-
-        } catch (error) {
-            console.error('Error accessing or applying camera:', error);
-            alert(`Error switching camera: ${error.name} - ${error.message}`);
-            currentStream = null;
-            cameraSelect.style.display = 'none';
-        }
-    }
-
-    switchCameraBtn.addEventListener('click', async () => {
-        if (cameraSelect.style.display === 'none' || cameraSelect.style.display === '') {
-            await setupCameraOptions();
-            cameraSelect.style.display = 'block';
-        } else {
-            cameraSelect.style.display = 'none';
-        }
-    });
-
-    applyCamera.addEventListener('click', applySelectedCamera);
-
-
-    AFRAME.registerComponent('zoom-controls', { /* ... Your existing zoom code ... */});
 
     const reception = document.querySelector('#reception');
     const library = document.querySelector('#library');
@@ -449,26 +248,6 @@
     cafeteria.addEventListener('markerLost', () => {
         console.log('Cafeteria marker lost');
         removeObjects(cafeteria);
-    });
-
-    sceneEl.addEventListener('loaded', () => {
-        console.log("A-Scene loaded event.");
-        arToolkitSource = sceneEl.systems.arjs._arContext.arToolkitSource;
-        arToolkitContext = sceneEl.systems.arjs._arContext.arToolkitContext;
-
-        if (arToolkitSource && arToolkitSource.domElement && arToolkitSource.domElement.srcObject) {
-            currentStream = arToolkitSource.domElement.srcObject;
-            console.log("Initial stream captured.");
-        } else {
-            console.warn("Could not get initial stream from arToolkitSource.");
-        }
-
-
-        setTimeout(handleResize, 500);
-
-        setupCameraOptions();
-
-        console.log("Scene loaded, AR context/source refs obtained, initial resize scheduled.");
     });
 
     sceneEl.addEventListener('arjs-video-loaded', () => {
