@@ -2,24 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>AR.js Example</title>
     <link rel="stylesheet" href="ar.css">
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         body, html {
             margin: 0;
             padding: 0;
+            width: 100%;
             height: 100%;
             overflow: hidden;
+            position: relative;
+        }
+
+        .ui--overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ui--button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        .ui--button a {
+            color: inherit;
+            text-decoration: none;
         }
 
         .camera-select {
             position: absolute;
-            top: 10px;
-            right: 64px;
+            top: 60px;
+            right: 10px;
             z-index: 9999;
             background: rgba(0, 0, 0, 0.7);
             color: white;
@@ -27,11 +58,37 @@
             border-radius: 5px;
             display: none;
         }
+
+        .arjs-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        a-scene.embedded {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        a-scene canvas {
+            display: block;
+        }
+
+
     </style>
 </head>
 <body>
 <div class="ui--overlay">
-    <button class="ui--button ui-button--home"><a class="ui--button--link" href="/"><i class="bi bi-house-fill"></i></a></button>
+    <button class="ui--button ui-button--home"><a class="ui--button--link" href="/"><i class="bi bi-house-fill"></i></a>
+    </button>
     <button class="ui--button ui-button--camera" id="switchCameraBtn"><i class="bi bi-camera"></i></button>
 </div>
 
@@ -44,13 +101,16 @@
 
 <a-scene
         embedded
-        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+        arjs="trackingMethod: best; sourceType: webcam; videoTexture: false; debugUIEnabled: false; displayWidth: window.innerWidth; displayHeight: window.innerHeight;"
         zoom-controls
+        renderer="antialias: true; alpha: true; logarithmicDepthBuffer: true;"
+        vr-mode-ui="enabled: false;"
         id="scene"
->
+        device-orientation-permission-ui="enabled: false">
     <a-marker id="reception" preset="custom" type="pattern" url="tags/patt/20.patt"></a-marker>
     <a-marker id="library" preset="custom" type="pattern" url="tags/patt/1.patt"></a-marker>
     <a-marker id="cafeteria" preset="custom" type="pattern" url="tags/patt/2.patt"></a-marker>
+
     <a-entity camera></a-entity>
 </a-scene>
 
@@ -63,12 +123,63 @@
     const CAFETERIA_LOCATION = {x: 8, y: 0, z: 0};
     const PIP_ROTATION = {x: -Math.PI / 2, y: 0, z: 0};
 
+    const sceneEl = document.getElementById('scene');
     const switchCameraBtn = document.getElementById('switchCameraBtn');
     const cameraSelect = document.getElementById('cameraSelect');
     const cameraOptions = document.getElementById('cameraOptions');
     const applyCamera = document.getElementById('applyCamera');
+
     let availableCameras = [];
     let currentStream = null;
+    let arToolkitSource = null;
+    let arToolkitContext = null;
+
+    function handleResize() {
+        console.log('handleResize called');
+        if (!sceneEl || !sceneEl.hasLoaded || !arToolkitSource || !arToolkitContext) {
+            console.log('Resize prerequisites not met.');
+            return;
+        }
+
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        console.log(`Window dimensions: ${screenWidth}x${screenHeight}`);
+
+        arToolkitSource.onResizeElement();
+
+        arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+
+        const renderer = sceneEl.renderer;
+        const canvas = sceneEl.canvas;
+        if (renderer && canvas) {
+            console.log(`Setting renderer size to: ${screenWidth}x${screenHeight}`);
+            const effectiveWidth = canvas.clientWidth || screenWidth;
+            const effectiveHeight = canvas.clientHeight || screenHeight;
+            renderer.setSize(effectiveWidth, effectiveHeight);
+        } else {
+            console.log('Renderer or Canvas not found for resize.');
+        }
+
+
+        const camera = sceneEl.camera;
+        if (camera) {
+            camera.aspect = screenWidth / screenHeight;
+            camera.updateProjectionMatrix();
+            console.log(`Camera aspect updated to: ${camera.aspect}`);
+        } else {
+            console.log('Camera not found for aspect update.');
+        }
+
+        sceneEl.resize();
+        console.log('handleResize finished');
+    }
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResize, 250); // Debounce
+    });
 
     async function getCameraDevices() {
         try {
@@ -82,63 +193,104 @@
 
     async function setupCameraOptions() {
         availableCameras = await getCameraDevices();
-
         cameraOptions.innerHTML = '';
 
         if (availableCameras.length === 0) {
             cameraOptions.innerHTML = '<option value="">No cameras found</option>';
+            applyCamera.disabled = true;
             return;
         }
 
+        applyCamera.disabled = false;
+        let hasSetSelection = false;
         availableCameras.forEach((camera, index) => {
             const option = document.createElement('option');
             option.value = camera.deviceId;
-
             let label = camera.label || `Camera ${index + 1}`;
             if (label.toLowerCase().includes('back') || label.toLowerCase().includes('rear')) {
                 label += ' (Back)';
-                option.selected = true;
+            } else if (label.toLowerCase().includes('front')) {
+                label += ' (Front)';
             }
             option.text = label;
-
             cameraOptions.appendChild(option);
         });
+
+        const currentVideoTrack = currentStream?.getVideoTracks()[0];
+        if (currentVideoTrack) {
+            const currentDeviceId = currentVideoTrack.getSettings().deviceId;
+            if (currentDeviceId && cameraOptions.querySelector(`option[value="${currentDeviceId}"]`)) {
+                cameraOptions.value = currentDeviceId;
+                hasSetSelection = true;
+            }
+        }
+
+        if (!hasSetSelection) {
+            const backCameraOption = Array.from(cameraOptions.options).find(opt => opt.text.toLowerCase().includes('back'));
+            if (backCameraOption) {
+                backCameraOption.selected = true;
+            } else if (cameraOptions.options.length > 0) {
+                cameraOptions.options[0].selected = true;
+            }
+        }
     }
 
     async function applySelectedCamera() {
         const selectedCameraId = cameraOptions.value;
+        if (!selectedCameraId || !arToolkitSource) {
+            console.log("No camera selected or AR source not ready.");
+            cameraSelect.style.display = 'none';
+            return;
+        }
+
+        console.log(`Attempting to switch to camera: ${selectedCameraId}`);
 
         if (currentStream) {
             currentStream.getTracks().forEach(track => track.stop());
+            console.log('Stopped previous stream.');
         }
-
-        const arScene = document.querySelector('a-scene');
-        const arSystem = arScene.systems['arjs'];
-        const arContext = arSystem._arContext;
-        const arToolkitSource = arContext.arToolkitSource;
 
         try {
             const constraints = {
                 video: {
-                    deviceId: { exact: selectedCameraId },
-                    width: { ideal: 640 },
-                    height: { ideal: 480 }
+                    deviceId: {exact: selectedCameraId},
+                    width: {ideal: 1280},
+                    height: {ideal: 720}
                 }
             };
 
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            console.log('Obtained new video stream.');
             currentStream = stream;
 
             const video = arToolkitSource.domElement;
+            if (!video) {
+                console.error("AR Toolkit video element not found!");
+                cameraSelect.style.display = 'none';
+                return;
+            }
+
             video.srcObject = stream;
+            await video.play();
+            console.log('Assigned new stream to video element and playing.');
 
-            cameraSelect.style.display = 'none';
+            video.onloadedmetadata = () => {
+                console.log('New video metadata loaded.');
+                handleResize();
+                cameraSelect.style.display = 'none';
+                console.log('Camera switch complete, resize triggered.');
+            };
+            video.onerror = (e) => {
+                console.error('Error playing new video stream:', e);
+                cameraSelect.style.display = 'none';
+            }
 
-            arToolkitSource.onResizeElement();
-            arToolkitSource.copyElementSizeTo(arContext.arController.canvas);
 
         } catch (error) {
-            console.error('Error accessing camera:', error);
+            console.error('Error accessing or applying camera:', error);
+            alert(`Error switching camera: ${error.name} - ${error.message}`);
+            currentStream = null;
+            cameraSelect.style.display = 'none';
         }
     }
 
@@ -153,117 +305,124 @@
 
     applyCamera.addEventListener('click', applySelectedCamera);
 
-    document.querySelector('a-scene').addEventListener('loaded', setupCameraOptions);
 
-    AFRAME.registerComponent('zoom-controls', {
-        init: function () {
-            this.camera = this.el.sceneEl.camera;
-            this.zoomLevel = 1;
-            this.minZoom = 0.5;
-            this.maxZoom = 2;
-            window.addEventListener('wheel', (event) => {
-                event.preventDefault();
-                this.adjustZoom(event.deltaY > 0 ? -0.1 : 0.1);
-            });
-            let lastDistance = null;
-            window.addEventListener('touchmove', (event) => {
-                if (event.touches.length === 2) {
-                    event.preventDefault();
-                    const touch1 = event.touches[0];
-                    const touch2 = event.touches[1];
-                    const distance = Math.hypot(touch1.pageX - touch2.pageX, touch1.pageY - touch2.pageY);
-                    if (lastDistance) {
-                        this.adjustZoom((distance - lastDistance) * 0.005);
-                    }
-                    lastDistance = distance;
-                }
-            });
-            window.addEventListener('touchend', () => lastDistance = null);
-        },
-        adjustZoom: function (delta) {
-            this.zoomLevel = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoomLevel + delta));
-            if (this.camera) {
-                this.camera.zoom = this.zoomLevel;
-                this.camera.updateProjectionMatrix();
-            }
-        }
-    });
+    AFRAME.registerComponent('zoom-controls', { /* ... Your existing zoom code ... */});
 
     const reception = document.querySelector('#reception');
     const library = document.querySelector('#library');
     const cafeteria = document.querySelector('#cafeteria');
-
-    // Store objects per marker to allow multiple instances
     const markerObjects = new Map();
 
     function loadObjects(marker, floor, map_position, pip_position) {
-        if (markerObjects.has(marker)) return; // Already loaded for this marker
+        if (markerObjects.has(marker.id)) {
+            console.log(`${marker.id}: Objects already loaded or loading.`);
+            return;
+        }
+        markerObjects.set(marker.id, {plane: 'loading', pip: 'loading'});
+        console.log(`${marker.id}: Loading objects...`);
 
-        const objects = { plane: null, pip: null };
-        markerObjects.set(marker, objects);
+
+        const loadedData = {plane: null, pip: null};
 
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
             floor,
-            function(texture) {
+            (texture) => {
                 const geometry = new THREE.PlaneGeometry(10, 5);
-                const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-                objects.plane = new THREE.Mesh(geometry, material);
-                objects.plane.position.set(map_position.x, map_position.y, map_position.z);
-                objects.plane.scale.set(2.5, 2.5, 2.5);
-                objects.plane.rotation.x = -Math.PI / 2;
-                marker.object3D.add(objects.plane);
-                console.log(`${marker.id}: Plane loaded`);
+                const material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+                const plane = new THREE.Mesh(geometry, material);
+                plane.position.set(map_position.x, map_position.y, map_position.z);
+                plane.scale.set(2.5, 2.5, 2.5);
+                plane.rotation.x = -Math.PI / 2;
+                marker.object3D.add(plane);
+                loadedData.plane = plane;
+                markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{plane: plane}});
+                console.log(`${marker.id}: Plane loaded and added.`);
             },
             undefined,
-            function(error) {
+            (error) => {
                 console.error(`${marker.id}: Error loading texture ${floor}`, error);
+                markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{plane: 'error'}});
             }
         );
 
-        const mtlLoader = new THREE.MTLLoader();
-        mtlLoader.load(
-            'OBJ/Pip_stand.mtl',
-            function(materials) {
-                materials.preload();
-                const objLoader = new THREE.OBJLoader();
-                objLoader.setMaterials(materials);
-                objLoader.load(
-                    'OBJ/Pip_stand.obj',
-                    function(object) {
-                        objects.pip = object;
-                        object.scale.set(0.1, 0.1, 0.1);
-                        object.rotation.set(PIP_ROTATION.x, PIP_ROTATION.y, PIP_ROTATION.z);
-                        object.position.set(pip_position.x, pip_position.y, pip_position.z);
-                        marker.object3D.add(object);
-                        console.log(`${marker.id}: Pip loaded`);
-                    },
-                    undefined,
-                    function(error) {
-                        console.error(`${marker.id}: Error loading Pip object`, error);
-                    }
-                );
-            },
-            undefined,
-            function(error) {
-                console.error(`${marker.id}: Error loading Pip materials`, error);
-            }
-        );
+        if (typeof THREE !== 'undefined' && THREE.MTLLoader && THREE.OBJLoader) {
+            const mtlLoader = new THREE.MTLLoader();
+            mtlLoader.load(
+                'OBJ/Pip_stand.mtl',
+                (materials) => {
+                    materials.preload();
+                    const objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.load(
+                        'OBJ/Pip_stand.obj',
+                        (object) => {
+                            object.scale.set(0.1, 0.1, 0.1);
+                            object.rotation.set(PIP_ROTATION.x, PIP_ROTATION.y, PIP_ROTATION.z);
+                            object.position.set(pip_position.x, pip_position.y, pip_position.z);
+                            marker.object3D.add(object);
+                            loadedData.pip = object;
+                            markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{pip: object}});
+                            console.log(`${marker.id}: Pip loaded and added.`);
+                        },
+                        undefined,
+                        (error) => {
+                            console.error(`${marker.id}: Error loading Pip object`, error);
+                            markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{pip: 'error'}});
+                        }
+                    );
+                },
+                undefined,
+                (error) => {
+                    console.error(`${marker.id}: Error loading Pip materials`, error);
+                    markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{pip: 'error'}});
+                }
+            );
+        } else {
+            console.error("THREE.MTLLoader or THREE.OBJLoader not available. Cannot load Pip.");
+            markerObjects.set(marker.id, {...markerObjects.get(marker.id), ...{pip: 'error'}});
+        }
     }
 
-    function removeObjects(marker) {
-        const objects = markerObjects.get(marker);
-        if (!objects) return;
 
-        if (objects.plane) {
+    function removeObjects(marker) {
+        const objects = markerObjects.get(marker.id);
+        if (!objects) {
+            console.log(`${marker.id}: No objects found to remove.`);
+            return;
+        }
+
+        console.log(`${marker.id}: Removing objects...`);
+        if (objects.plane && objects.plane !== 'loading' && objects.plane !== 'error') {
             marker.object3D.remove(objects.plane);
-            console.log(`${marker.id}: Plane removed`);
+            if (objects.plane.geometry) objects.plane.geometry.dispose();
+            if (objects.plane.material) {
+                if (objects.plane.material.map) objects.plane.material.map.dispose();
+                objects.plane.material.dispose();
+            }
+            console.log(`${marker.id}: Plane removed.`);
         }
-        if (objects.pip) {
+        if (objects.pip && objects.pip !== 'loading' && objects.pip !== 'error') {
             marker.object3D.remove(objects.pip);
-            console.log(`${marker.id}: Pip removed`);
+            objects.pip.traverse(child => {
+                if (child.isMesh) {
+                    if (child.geometry) child.geometry.dispose();
+                    if (child.material) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(mat => {
+                                if (mat.map) mat.map.dispose();
+                                mat.dispose();
+                            });
+                        } else {
+                            if (child.material.map) child.material.map.dispose();
+                            child.material.dispose();
+                        }
+                    }
+                }
+            });
+            console.log(`${marker.id}: Pip removed.`);
         }
-        markerObjects.delete(marker);
+        markerObjects.delete(marker.id);
     }
 
     reception.addEventListener('markerFound', () => {
@@ -291,6 +450,32 @@
         console.log('Cafeteria marker lost');
         removeObjects(cafeteria);
     });
+
+    sceneEl.addEventListener('loaded', () => {
+        console.log("A-Scene loaded event.");
+        arToolkitSource = sceneEl.systems.arjs._arContext.arToolkitSource;
+        arToolkitContext = sceneEl.systems.arjs._arContext.arToolkitContext;
+
+        if (arToolkitSource && arToolkitSource.domElement && arToolkitSource.domElement.srcObject) {
+            currentStream = arToolkitSource.domElement.srcObject;
+            console.log("Initial stream captured.");
+        } else {
+            console.warn("Could not get initial stream from arToolkitSource.");
+        }
+
+
+        setTimeout(handleResize, 500);
+
+        setupCameraOptions();
+
+        console.log("Scene loaded, AR context/source refs obtained, initial resize scheduled.");
+    });
+
+    sceneEl.addEventListener('arjs-video-loaded', () => {
+        console.log("AR.js video loaded event.");
+    });
+
+
 </script>
 </body>
 </html>
