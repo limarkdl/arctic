@@ -6,6 +6,32 @@
 [![FIGMA ARCTIC](https://github.com/user-attachments/assets/c3818859-72bf-4443-b21b-9ff6160f570b)](https://www.figma.com/design/8D3L5ru3k3rl5GRFikcHo2/CO2410%3A-The-Agile-Professional?node-id=27-434&t=zi0vDoWvbusvbo5O-1)
 > Logs of team meetings are available in [this file](LOGS.md)
 
+## Appearance
+
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/469ead84-957f-41c3-9048-c71c89e0befe" width="200" />
+  <img src="https://github.com/user-attachments/assets/091eda94-a708-4565-99c8-36da40da1449" width="200" /> 
+  <img src="https://github.com/user-attachments/assets/ef4c9c74-776e-4a3a-861c-6556e4293e74" width="200" />
+  <img src="https://github.com/user-attachments/assets/fdeea6bb-84cc-41ce-9e45-f6c6e6f81789" width="200" />
+  <img src="https://github.com/user-attachments/assets/7b8505d1-426e-41b0-8c76-4aa2a61e675a" width="200" />
+  <img src="https://github.com/user-attachments/assets/76923b2a-9b4c-4934-9054-5dd49b2bee39" width="200" />
+  <img src="https://github.com/user-attachments/assets/19671996-7786-43ae-b9f6-223a0df6043c" width="200" />
+</p>
+
+## Apriltags
+
+<p float="left">
+ <img src="https://github.com/user-attachments/assets/5aaf1b05-0950-455c-8b15-4d89e3f3e23c" width="200" />
+ <img src="https://github.com/user-attachments/assets/862e5d1d-07f9-4cc7-bff8-978f8adb2003" width="200" />
+ <img src="https://github.com/user-attachments/assets/79aa69de-f08e-4e91-83d8-6e6de1628029" width="200" />
+</p>
+
+
+
+
+
+
 ## How to build & run
 
 ### Run `DEV`
