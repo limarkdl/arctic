@@ -30,9 +30,6 @@ This is a group homework assignment for the University of Central Lancashire (Cy
 - <a href='https://ar-js-org.github.io/AR.js-Docs/' target="_blank"><img alt='javascript' src='https://img.shields.io/badge/AR.js-100000?style=flat&logo=javascript&logoColor=white&labelColor=000000&color=000000'/></a>
 - <a href='https://figma.com' target="_blank"><img alt='figma' src='https://img.shields.io/badge/Figma-100000?style=flat&logo=figma&logoColor=white&labelColor=000000&color=000000'/></a>
 
-## How to run
-#### TODO: 'To be documented'
-
 ---
 ## Authors
 
